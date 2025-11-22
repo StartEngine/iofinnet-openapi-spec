@@ -53,24 +53,40 @@ The spec is built manually by extracting information from each documentation pag
 **Last Updated:** November 21, 2025
 
 **Statistics:**
-- 31 documentation pages processed
-- 29 unique endpoints documented
-- 52+ schema definitions
-- 10 functional areas covered
+- 58 documentation pages processed
+- 56 unique endpoints documented
+- 83 schema definitions
+- 11 functional areas covered
 
 **Covered API Areas:**
-- Authentication (OAuth token generation)
-- Vaults (list, get details, assets)
-- Signatures (create, list, get details, voting)
-- Transfers (native asset, token, sign and broadcast)
-- Network (io.network transfers, statement, directory)
-- Addresses (validate, register, list, manage, HD addresses)
-- Balances (native and token balance queries)
-- Chains (list supported chains and features)
-- Transactions (create from hex)
+- **Authentication** - OAuth token generation
+- **Vaults** - List, get details, assets, rule execution logs
+- **Signatures** - Create, list, get details, voting
+- **Transfers** - Native asset, token, sign and broadcast
+- **Network** - io.network transfers, statement, directory
+- **Addresses** - Validate, register, list, manage, HD addresses, bulk operations
+- **Balances** - Native and token balance queries
+- **Chains** - List supported chains and features
+- **Transactions** - Complete multi-ecosystem support:
+  - **EVM** (60+ chains): Get, List, Scan, Build native/token
+  - **SVM/Solana**: Get, List, Scan, Build native/token
+  - **TVM/Tron**: Get, List, Build native/token
+  - **XRP/Ripple**: Get, List, Build native
+  - **UTXO** (Bitcoin, Litecoin, Cardano, Avalanche): Get, List, Build native
+  - **Substrate** (Bittensor): Build native
+- **Rules** - Complete rule lifecycle management:
+  - **Rule CRUD**: Create, Read (list/get), Update post-transaction rules
+  - **Execution Logs**: List all logs, by rule ID, or get specific log
+
+**Transaction Operations Coverage:**
+- ✅ **3 ecosystems with full native + token support**: EVM, SVM, TVM
+- ✅ **3 ecosystems with native support**: XRP, UTXO, Substrate
+- ✅ **Transaction scanning** (security): EVM, SVM
+- ✅ **Transaction history**: EVM, SVM, XRP, UTXO, TVM
 
 **Known Limitations:**
 - Chain enum values are incomplete (shows "mnee" + note about 70+ additional values)
 - Some nested object schemas (like `nativeCurrency`, `rpcUrls`, `blockExplorers`, `features` in chain responses) are defined as generic objects without detailed properties
 - Response examples are not included
 - Rate limiting and error response details may be incomplete
+- Cosmos ecosystem endpoints not yet documented

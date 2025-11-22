@@ -981,6 +981,481 @@
         }
       }
     },
+    "/v1/vaults/{vaultId}/rules/executions": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "List vault rule execution logs",
+        "description": "Retrieves a paginated list of rule execution logs for a specific vault",
+        "operationId": "listVaultRuleExecutionLogs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the beginning",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the end",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of rule execution logs for a vault",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleExecutionLogsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/rules/{ruleId}/executions": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "List vault rule execution logs by rule id",
+        "description": "Retrieves a paginated list of rule execution logs for a specific rule in a vault",
+        "operationId": "listVaultRuleExecutionLogsByRuleId",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the rule",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the beginning",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the end",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of rule execution logs for a specific rule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleExecutionLogsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/rules/executions/{executionLogId}": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "Get a vault rule execution log",
+        "description": "Retrieves details of a specific rule execution log",
+        "operationId": "getVaultRuleExecutionLog",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "executionLogId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the execution log",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vault rule execution log details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleExecutionLogDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vault rule execution log not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/rules": {
+      "post": {
+        "tags": ["Vaults"],
+        "summary": "Create a post transaction rule",
+        "description": "Creates a new post transaction rule for a vault",
+        "operationId": "createPostTransactionRule",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostTransactionRuleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post transaction rule created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTransactionRuleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "List post transaction rules",
+        "description": "Retrieves a paginated list of post transaction rules for a vault",
+        "operationId": "listPostTransactionRules",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the beginning",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the end",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of post transaction rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTransactionRulesListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/rules/{ruleId}": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "Get a post transaction rule",
+        "description": "Retrieves details of a specific post transaction rule",
+        "operationId": "getPostTransactionRule",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the rule",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post transaction rule details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTransactionRuleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Vaults"],
+        "summary": "Update a post transaction rule",
+        "description": "Updates an existing post transaction rule",
+        "operationId": "updatePostTransactionRule",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the rule",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostTransactionRuleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post transaction rule updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTransactionRuleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/v1/addresses/ecosystem/{ecosystem}/chain/{chain}/validate": {
       "post": {
         "tags": ["Addresses"],
@@ -2077,6 +2552,182 @@
         }
       }
     },
+    "/v1/transactions/ecosystem/svm/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "List SVM transactions",
+        "description": "Retrieves a paginated list of transactions associated with a specific address on SVM ecosystem",
+        "operationId": "listSVMTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Solana chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["solana", "solana-testnet"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "The number of transactions to return (1-50, default: 15)",
+            "schema": {
+              "type": "string",
+              "default": "15"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The cursor to begin querying from",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of SVM transactions with pagination details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SVMTransactionsListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/svm/chain/solana/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build SVM (Solana) native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on Solana",
+        "operationId": "buildSVMNativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildSVMNativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/svm/chain/solana/build-token-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build SVM (Solana) token transfer transaction hex",
+        "description": "Builds a transaction hex for a token transfer on Solana",
+        "operationId": "buildSVMTokenTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildSVMTokenTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/v1/transactions/ecosystem/evm/chain/{chain}/address/{address}/transaction/{transactionHash}": {
       "get": {
         "tags": ["Transactions"],
@@ -2144,6 +2795,907 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/evm/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "List EVM transactions",
+        "description": "Retrieves a paginated list of transactions associated with a specific address on EVM ecosystem",
+        "operationId": "listEVMTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "EVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "The number of transactions to return (1-50, default: 15)",
+            "schema": {
+              "type": "string",
+              "default": "15"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The cursor to begin querying from",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions with pagination details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EVMTransactionsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/evm/chain/{chain}/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on EVM chain",
+        "operationId": "buildNativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "EVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["eth"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildNativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/evm/chain/{chain}/build-token-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build token transfer transaction hex",
+        "description": "Builds a transaction hex for a token transfer on EVM chain",
+        "operationId": "buildTokenTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "EVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildTokenTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/xrp/chain/{chain}/address/{address}/transaction/{transactionHash}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get XRP transaction",
+        "description": "Retrieves a transaction associated with a specific address on XRP ecosystem",
+        "operationId": "getXRPTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "XRP chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["ripple", "ripple-testnet"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "path",
+            "required": true,
+            "description": "Transaction hash",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/XRPTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/xrp/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "List XRP transactions",
+        "description": "Retrieves a paginated list of transactions associated with a specific address on XRP ecosystem",
+        "operationId": "listXRPTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "XRP chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["ripple", "ripple-testnet"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "The number of transactions to return (1-50, default: 15)",
+            "schema": {
+              "type": "string",
+              "default": "15"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The cursor to begin querying from",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions with pagination details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/XRPTransactionsListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/xrp/chain/ripple/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build XRP native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on Ripple (XRP)",
+        "operationId": "buildXRPNativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildXRPNativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/utxo/chain/{chain}/address/{address}/transaction/{transactionHash}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get UTXO transaction",
+        "description": "Retrieves a transaction associated with a specific address on UTXO ecosystem (Bitcoin, Litecoin, Cardano, Avalanche)",
+        "operationId": "getUTXOTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "UTXO chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee", "mnee-testnet", "bitcoin", "litecoin", "cardano", "avalanche-p-chain", "avalanche-x-chain"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "path",
+            "required": true,
+            "description": "Transaction hash",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UTXOTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/utxo/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "List UTXO transactions",
+        "description": "Retrieves a paginated list of transactions associated with a specific address on UTXO ecosystem",
+        "operationId": "listUTXOTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "UTXO chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee", "mnee-testnet", "bitcoin", "litecoin", "cardano", "avalanche-p-chain", "avalanche-x-chain"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "The number of transactions to return (1-50, default: 15)",
+            "schema": {
+              "type": "string",
+              "default": "15"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The cursor to begin querying from",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions with pagination details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UTXOTransactionsListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/utxo/chain/btc/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build UTXO native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on Bitcoin (UTXO)",
+        "operationId": "buildUTXONativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildUTXONativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/tvm/chain/{chain}/address/{address}/transaction/{transactionHash}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get TVM transaction",
+        "description": "Retrieves a transaction associated with a specific address on TVM ecosystem",
+        "operationId": "getTVMTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "TVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["tron"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "path",
+            "required": true,
+            "description": "Transaction hash",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "query",
+            "required": true,
+            "description": "Chain identifier (query param)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Account address (query param)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "query",
+            "required": true,
+            "description": "Transaction hash (query param)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "query",
+            "required": true,
+            "description": "Ecosystem type",
+            "schema": {
+              "type": "string",
+              "enum": ["evm", "svm", "utxo", "tvm"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TVMTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/tvm/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "List TVM transactions",
+        "description": "Retrieves a paginated list of transactions associated with a specific address on TVM ecosystem",
+        "operationId": "listTVMTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "TVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["tron"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "The number of transactions to return (1-50, default: 15)",
+            "schema": {
+              "type": "string",
+              "default": "15"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "The cursor to begin querying from",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of TVM transactions with pagination details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TVMTransactionsListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/tvm/chain/tron/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build TVM (Tron) native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on Tron",
+        "operationId": "buildTVMNativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildTVMNativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/tvm/chain/tron/build-token-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build TVM (Tron) token transfer transaction hex",
+        "description": "Builds a transaction hex for a token transfer on Tron",
+        "operationId": "buildTVMTokenTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildTVMTokenTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/substrate/chain/bittensor/build-native-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Build Substrate (Bittensor) native transfer transaction hex",
+        "description": "Builds a transaction hex for a native transfer on the Bittensor chain",
+        "operationId": "buildSubstrateNativeTransactionHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildSubstrateNativeTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction hex built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
           },
           "401": {
             "description": "Unauthorized"
@@ -3057,6 +4609,205 @@
           }
         }
       },
+      "RuleExecutionLog": {
+        "type": "object",
+        "required": ["id", "rule", "status", "error", "errorCause", "executionTimeMS", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the execution log"
+          },
+          "rule": {
+            "type": "object",
+            "description": "Rule that was executed"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["started", "completed", "failed"],
+            "description": "Status of the rule execution"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if the execution failed"
+          },
+          "errorCause": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cause of the error if the execution failed"
+          },
+          "metadata": {
+            "type": "string",
+            "description": "Additional metadata about the execution"
+          },
+          "executionTimeMS": {
+            "type": "string",
+            "nullable": true,
+            "description": "Execution time in milliseconds"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when the execution log was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when the execution log was last updated"
+          }
+        }
+      },
+      "RuleExecutionLogsResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleExecutionLog"
+            },
+            "description": "Array of rule execution log objects"
+          },
+          "pageInfo": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more logs after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are more logs before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "RuleExecutionLogDetailResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RuleExecutionLog",
+            "description": "Rule execution log details"
+          }
+        }
+      },
+      "CreatePostTransactionRuleRequest": {
+        "type": "object",
+        "description": "Request body for creating a post transaction rule. Specific fields depend on rule type."
+      },
+      "PostTransactionRuleResponse": {
+        "type": "object",
+        "required": ["id", "type", "friendlyName", "config", "enabled", "preFundingEnabled", "fundingAddressId", "networkFeeMultiplier"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the rule"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["auto-sweep"],
+            "description": "Type of the rule"
+          },
+          "friendlyName": {
+            "type": "string",
+            "description": "Human-readable name for the rule"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Condition that triggers the rule"
+          },
+          "config": {
+            "type": "object",
+            "required": ["receivingAddressId"],
+            "properties": {
+              "receivingAddressId": {
+                "type": "string",
+                "description": "ID of the receiving address"
+              }
+            },
+            "description": "Rule configuration"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the rule is enabled"
+          },
+          "preFundingEnabled": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether pre-funding is enabled"
+          },
+          "fundingAddressId": {
+            "type": "string",
+            "nullable": true,
+            "description": "ID of the funding address"
+          },
+          "networkFeeMultiplier": {
+            "type": "number",
+            "nullable": true,
+            "description": "Multiplier for network fees"
+          }
+        }
+      },
+      "PostTransactionRulesListResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostTransactionRuleResponse"
+            },
+            "description": "Array of post transaction rule objects"
+          },
+          "pageInfo": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more rules after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are more rules before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "UpdatePostTransactionRuleRequest": {
+        "type": "object",
+        "required": ["rule"],
+        "properties": {
+          "rule": {
+            "type": "object",
+            "description": "Rule object to update. Specific fields depend on rule type."
+          }
+        }
+      },
       "ValidateAddressRequest": {
         "type": "object",
         "required": ["address"],
@@ -3711,6 +5462,108 @@
           }
         }
       },
+      "SVMTransactionResponse": {
+        "type": "object",
+        "required": ["chain", "accountAddress", "timestamp", "classificationData", "rawTransactionData"],
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": ["solana", "solana-testnet"],
+            "description": "Solana chain identifier"
+          },
+          "accountAddress": {
+            "type": "string",
+            "description": "Account address associated with the transaction"
+          },
+          "timestamp": {
+            "type": "number",
+            "description": "Transaction timestamp"
+          },
+          "classificationData": {
+            "type": "object",
+            "required": ["transfers"],
+            "properties": {
+              "transfers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["action", "amount", "from", "to"],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "description": "Transfer action type"
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "Transfer amount"
+                    },
+                    "from": {
+                      "type": "object",
+                      "description": "Source of the transfer"
+                    },
+                    "to": {
+                      "type": "object",
+                      "description": "Destination of the transfer"
+                    },
+                    "token": {
+                      "type": "object",
+                      "description": "Token details if applicable"
+                    },
+                    "nft": {
+                      "type": "object",
+                      "description": "NFT details if applicable"
+                    }
+                  }
+                },
+                "description": "Array of transfers in the transaction"
+              }
+            },
+            "description": "Transaction classification data"
+          },
+          "rawTransactionData": {
+            "type": "object",
+            "description": "Raw transaction data from the blockchain"
+          }
+        }
+      },
+      "SVMTransactionsListResponse": {
+        "type": "object",
+        "required": ["data", "pagination"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SVMTransactionResponse"
+            },
+            "description": "Array of SVM transaction objects"
+          },
+          "pagination": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
       "EVMTransactionResponse": {
         "type": "object",
         "required": ["chain", "accountAddress", "classificationData", "rawTransactionData"],
@@ -3815,6 +5668,727 @@
               }
             },
             "description": "Raw transaction data"
+          }
+        }
+      },
+      "EVMTransactionsListResponse": {
+        "type": "object",
+        "required": ["data", "pagination"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EVMTransactionResponse"
+            },
+            "description": "Array of transaction objects"
+          },
+          "pagination": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are transactions before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "BuildNativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount of native currency to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          },
+          "gasPrice": {
+            "type": "string",
+            "nullable": true,
+            "description": "Gas price for the transaction"
+          },
+          "gasLimit": {
+            "type": "string",
+            "nullable": true,
+            "description": "Gas limit for the transaction"
+          },
+          "data": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional data to include in the transaction"
+          },
+          "nonce": {
+            "type": "number",
+            "nullable": true,
+            "description": "Transaction nonce"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["legacy", "eip1559"],
+            "description": "Transaction type (legacy or EIP-1559)"
+          },
+          "maxFeePerGas": {
+            "type": "string",
+            "nullable": true,
+            "description": "Maximum fee per gas (EIP-1559)"
+          },
+          "maxPriorityFeePerGas": {
+            "type": "string",
+            "nullable": true,
+            "description": "Maximum priority fee per gas (EIP-1559)"
+          }
+        }
+      },
+      "BuildTransactionResponse": {
+        "type": "object",
+        "required": ["serializedTransaction", "marshalledHex"],
+        "properties": {
+          "serializedTransaction": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of serialized transaction data"
+          },
+          "marshalledHex": {
+            "type": "string",
+            "description": "Marshalled hex representation of the transaction"
+          }
+        }
+      },
+      "BuildTokenTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to", "tokenAddress"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount of tokens to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token contract address"
+          },
+          "gasPrice": {
+            "type": "string",
+            "nullable": true,
+            "description": "Gas price for the transaction"
+          },
+          "gasLimit": {
+            "type": "string",
+            "nullable": true,
+            "description": "Gas limit for the transaction"
+          },
+          "data": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional data to include in the transaction"
+          },
+          "nonce": {
+            "type": "number",
+            "nullable": true,
+            "description": "Transaction nonce"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["legacy", "eip1559"],
+            "description": "Transaction type (legacy or EIP-1559)"
+          },
+          "maxFeePerGas": {
+            "type": "string",
+            "nullable": true,
+            "description": "Maximum fee per gas (EIP-1559)"
+          },
+          "maxPriorityFeePerGas": {
+            "type": "string",
+            "nullable": true,
+            "description": "Maximum priority fee per gas (EIP-1559)"
+          }
+        }
+      },
+      "XRPTransactionResponse": {
+        "type": "object",
+        "required": ["chain", "accountAddress", "classificationData", "rawTransactionData"],
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": ["ripple", "ripple-testnet"],
+            "description": "XRP chain identifier"
+          },
+          "accountAddress": {
+            "type": "string",
+            "description": "Account address associated with the transaction"
+          },
+          "classificationData": {
+            "type": "object",
+            "required": ["type", "description", "transfers"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Classification type of the transaction"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the transaction"
+              },
+              "transfers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["action", "from", "to", "amount", "token"],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "description": "Transfer action type"
+                    },
+                    "from": {
+                      "type": "object",
+                      "description": "Source of the transfer"
+                    },
+                    "to": {
+                      "type": "object",
+                      "description": "Destination of the transfer"
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "Amount transferred"
+                    },
+                    "token": {
+                      "type": "object",
+                      "description": "Token information"
+                    }
+                  }
+                },
+                "description": "List of transfers in the transaction"
+              }
+            },
+            "description": "Classification data for the transaction"
+          },
+          "rawTransactionData": {
+            "type": "object",
+            "required": ["transactionHash", "blockNumber", "transactionFee", "timestamp", "operationId"],
+            "properties": {
+              "transactionHash": {
+                "type": "string",
+                "description": "Transaction hash"
+              },
+              "blockNumber": {
+                "type": "number",
+                "description": "Block number"
+              },
+              "transactionFee": {
+                "type": "object",
+                "description": "Transaction fee details"
+              },
+              "timestamp": {
+                "type": "number",
+                "description": "Transaction timestamp"
+              },
+              "memo": {
+                "type": "string",
+                "description": "Optional memo field"
+              },
+              "operationId": {
+                "type": "string",
+                "description": "Operation identifier"
+              }
+            },
+            "description": "Raw transaction data"
+          }
+        }
+      },
+      "XRPTransactionsListResponse": {
+        "type": "object",
+        "required": ["data", "pagination"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XRPTransactionResponse"
+            },
+            "description": "Array of XRP transaction objects"
+          },
+          "pagination": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are transactions before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "BuildXRPNativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount of XRP to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          },
+          "tag": {
+            "type": "string",
+            "description": "Destination tag for XRP transaction"
+          },
+          "memo": {
+            "type": "string",
+            "description": "Memo field for XRP transaction"
+          }
+        }
+      },
+      "UTXOTransactionResponse": {
+        "type": "object",
+        "required": ["chain", "accountAddress", "classificationData", "rawTransactionData"],
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": ["mnee", "mnee-testnet", "bitcoin", "litecoin", "cardano", "avalanche-p-chain", "avalanche-x-chain"],
+            "description": "UTXO chain identifier"
+          },
+          "accountAddress": {
+            "type": "string",
+            "description": "Account address associated with the transaction"
+          },
+          "classificationData": {
+            "type": "object",
+            "required": ["type", "description", "transfers"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Classification type of the transaction"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the transaction"
+              },
+              "transfers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["action", "from", "to", "amount"],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "description": "Transfer action type"
+                    },
+                    "from": {
+                      "type": "object",
+                      "description": "Source of the transfer"
+                    },
+                    "to": {
+                      "type": "object",
+                      "description": "Destination of the transfer"
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "Amount transferred"
+                    },
+                    "token": {
+                      "type": "object",
+                      "description": "Token information if applicable"
+                    },
+                    "nft": {
+                      "type": "object",
+                      "description": "NFT information if applicable"
+                    }
+                  }
+                },
+                "description": "List of transfers in the transaction"
+              }
+            },
+            "description": "Classification data for the transaction"
+          },
+          "rawTransactionData": {
+            "type": "object",
+            "required": ["transactionHash", "blockNumber", "transactionFee", "timestamp", "operationId"],
+            "properties": {
+              "transactionHash": {
+                "type": "string",
+                "description": "Transaction hash"
+              },
+              "blockNumber": {
+                "type": "number",
+                "description": "Block number"
+              },
+              "transactionFee": {
+                "type": "object",
+                "description": "Transaction fee details"
+              },
+              "timestamp": {
+                "type": "number",
+                "description": "Transaction timestamp"
+              },
+              "operationId": {
+                "type": "string",
+                "description": "Operation identifier"
+              }
+            },
+            "description": "Raw transaction data"
+          }
+        }
+      },
+      "UTXOTransactionsListResponse": {
+        "type": "object",
+        "required": ["data", "pagination"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UTXOTransactionResponse"
+            },
+            "description": "Array of UTXO transaction objects"
+          },
+          "pagination": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are transactions before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "TVMTransactionResponse": {
+        "type": "object",
+        "required": ["chain", "accountAddress", "classificationData", "rawTransactionData"],
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": ["tron"],
+            "description": "TVM chain identifier"
+          },
+          "accountAddress": {
+            "type": "string",
+            "description": "Account address associated with the transaction"
+          },
+          "classificationData": {
+            "type": "object",
+            "required": ["description", "transfers"],
+            "properties": {
+              "description": {
+                "type": "string",
+                "description": "Transaction description"
+              },
+              "transfers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["action", "from", "to", "amount", "token"],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "description": "Transfer action type"
+                    },
+                    "from": {
+                      "type": "object",
+                      "description": "Source of the transfer"
+                    },
+                    "to": {
+                      "type": "object",
+                      "description": "Destination of the transfer"
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "Transfer amount"
+                    },
+                    "token": {
+                      "type": "object",
+                      "description": "Token information"
+                    }
+                  }
+                },
+                "description": "Array of transfers in the transaction"
+              }
+            },
+            "description": "Transaction classification data"
+          },
+          "rawTransactionData": {
+            "type": "object",
+            "required": ["transactionHash", "fromAddress", "toAddress", "blockNumber", "gas", "gasUsed", "gasPrice", "transactionFee", "timestamp", "operationId"],
+            "properties": {
+              "transactionHash": {
+                "type": "string",
+                "description": "Transaction hash"
+              },
+              "fromAddress": {
+                "type": "string",
+                "description": "Sender address"
+              },
+              "toAddress": {
+                "type": "string",
+                "description": "Recipient address"
+              },
+              "blockNumber": {
+                "type": "number",
+                "description": "Block number"
+              },
+              "gas": {
+                "type": "number",
+                "description": "Gas limit"
+              },
+              "gasUsed": {
+                "type": "number",
+                "description": "Gas used"
+              },
+              "gasPrice": {
+                "type": "number",
+                "description": "Gas price"
+              },
+              "transactionFee": {
+                "type": "object",
+                "description": "Transaction fee details"
+              },
+              "timestamp": {
+                "type": "number",
+                "description": "Transaction timestamp"
+              },
+              "operationId": {
+                "type": "string",
+                "description": "Operation identifier"
+              }
+            },
+            "description": "Raw transaction data from the blockchain"
+          }
+        }
+      },
+      "TVMTransactionsListResponse": {
+        "type": "object",
+        "required": ["data", "pagination"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TVMTransactionResponse"
+            },
+            "description": "Array of TVM transaction objects"
+          },
+          "pagination": {
+            "type": "object",
+            "required": ["hasNextPage", "hasPreviousPage", "nextCursor", "previousCursor"],
+            "properties": {
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions after the current page"
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "description": "Whether there are more transactions before the current page"
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the next page of results"
+              },
+              "previousCursor": {
+                "type": "string",
+                "nullable": true,
+                "description": "Cursor for the previous page of results"
+              }
+            },
+            "description": "Pagination information"
+          }
+        }
+      },
+      "BuildTVMNativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          }
+        }
+      },
+      "BuildTVMTokenTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to", "tokenAddress"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token contract address"
+          }
+        }
+      },
+      "BuildUTXONativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          }
+        }
+      },
+      "BuildSVMNativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          }
+        }
+      },
+      "BuildSVMTokenTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to", "tokenAddress", "decimals"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token contract address"
+          },
+          "decimals": {
+            "type": "number",
+            "description": "Token decimal precision"
+          }
+        }
+      },
+      "BuildSubstrateNativeTransactionRequest": {
+        "type": "object",
+        "required": ["amount", "to"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "to": {
+            "type": "string",
+            "description": "Destination address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD wallet derivation path"
           }
         }
       }
