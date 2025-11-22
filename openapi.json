@@ -1,0 +1,3824 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IOFinNet API",
+    "description": "IOFinNet platform API for financial automation. The platform leverages cryptography, blockchain, multi-party computation, and distributed systems to revolutionize conventional finance. Services include:\n\n- **io.vault**: MPC TSS institutional digital asset self-custody solution\n- **io.network**: Always-on settlement platform for instant transactions\n\nExtracted from https://docs.iofinnet.com/reference/core-introduction",
+    "version": "1.0.0",
+    "contact": {
+      "name": "IOFinNet",
+      "url": "https://docs.iofinnet.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.iofinnet.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/v1/auth/accessToken": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Get access token",
+        "description": "Fetches an access token using client credentials (OAuth)",
+        "operationId": "getAccessToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid credentials"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "5XX": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/v1/vaults": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "List all vaults",
+        "description": "Retrieves a paginated list of all vaults accessible to the user. Each vault represents a secure storage space for managing digital assets and creating signatures.",
+        "operationId": "listVaults",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "string",
+              "default": "30"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VaultsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "Get vault details",
+        "description": "Retrieves detailed information about a specific vault by its ID",
+        "operationId": "getVaultDetails",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vault"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/assets": {
+      "get": {
+        "tags": ["Vaults"],
+        "summary": "List vault assets",
+        "description": "Retrieves a list of all assets visible in a specific vault, including their balances and receiving addresses",
+        "operationId": "listVaultAssets",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VaultAssetsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/assets/{assetId}/transactions": {
+      "get": {
+        "tags": ["Assets"],
+        "summary": "List asset transactions",
+        "description": "Retrieves a paginated list of transactions for a specific asset in a vault",
+        "operationId": "listAssetTransactions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the asset",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "string",
+              "default": "30"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/{chainAlias}/transfer/native": {
+      "post": {
+        "tags": ["Transfers"],
+        "summary": "Create a native asset transfer",
+        "description": "Create a native asset transfer and broadcast it to chain",
+        "operationId": "createNativeTransfer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainAlias",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain alias",
+            "schema": {
+              "type": "string",
+              "enum": ["BTC"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NativeTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/{chainAlias}/transfer/token": {
+      "post": {
+        "tags": ["Transfers"],
+        "summary": "Create a token transfer",
+        "description": "Create a token transfer and broadcast it to chain",
+        "operationId": "createTokenTransfer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainAlias",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain alias",
+            "schema": {
+              "type": "string",
+              "enum": ["ETH"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/{chainAlias}/sign-and-broadcast": {
+      "post": {
+        "tags": ["Transfers"],
+        "summary": "Sign and broadcast a transaction",
+        "description": "Sign and broadcast a transaction",
+        "operationId": "signAndBroadcast",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainAlias",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain alias",
+            "schema": {
+              "type": "string",
+              "enum": ["ETH"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignAndBroadcastRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/signatures": {
+      "get": {
+        "tags": ["Signatures"],
+        "summary": "List signature requests",
+        "description": "Retrieves a paginated list of all signature requests for a specific vault. Each signature request represents a pending or completed cryptographic signature operation.",
+        "operationId": "listSignatureRequests",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "string",
+              "default": "30"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignatureRequestsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/signatures/sign": {
+      "post": {
+        "tags": ["Signatures"],
+        "summary": "Create signature request",
+        "description": "Creates a new signature request for cryptographic signing. The request will require approval from vault signers based on their configured weights.",
+        "operationId": "createSignatureRequest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSignatureRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignatureRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/signatures/{signatureId}": {
+      "get": {
+        "tags": ["Signatures"],
+        "summary": "Get signature request details",
+        "description": "Retrieves detailed information about a specific signature request",
+        "operationId": "getSignatureRequest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "signatureId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the signature request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignatureRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/network/directory": {
+      "get": {
+        "tags": ["Network"],
+        "summary": "List network directory",
+        "description": "Retrieves a paginated list of all entries in the io.network directory. The directory contains information about registered users and organisations in the io.network ecosystem. You can search for entries by display name or address.",
+        "operationId": "listNetworkDirectory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Search for directory entry by display name or address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "string",
+              "default": "30"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DirectoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/network/directory/address/{address}": {
+      "get": {
+        "tags": ["Network"],
+        "summary": "Lookup directory entry",
+        "description": "Retrieves detailed information about a specific directory entry by address",
+        "operationId": "lookupDirectoryEntry",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "io.network address to look up",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DirectoryEntry"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/network/transfers": {
+      "post": {
+        "tags": ["Network"],
+        "summary": "Create network transfer",
+        "description": "Creates a new transfer request for io.network assets. Note: This endpoint requires an io.network subscription. This endpoint initiates a transfer of io.network assets from the vault to a specified address. The receiving address must be an address that is registered in the io.network directory.",
+        "operationId": "createNetworkTransfer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNetworkTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNetworkTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/network/transfers/{transferId}": {
+      "get": {
+        "tags": ["Network"],
+        "summary": "Get network transfer details",
+        "description": "Retrieves detailed information about a specific network transfer",
+        "operationId": "getNetworkTransfer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transferId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the transfer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkTransfer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/network/statement": {
+      "get": {
+        "tags": ["Network"],
+        "summary": "List network statement",
+        "description": "Retrieves a paginated list of all io.network transactions for a specific vault. This endpoint returns a history of all completed io.network transactions, including transfers between io.network addresses, minting and burning operations, and transaction status and details. Note: This endpoint requires an io.network subscription.",
+        "operationId": "listNetworkStatement",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "string",
+              "default": "30"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkStatementResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/addresses/ecosystem/{ecosystem}/chain/{chain}/validate": {
+      "post": {
+        "tags": ["Addresses"],
+        "summary": "Validate address",
+        "description": "Validates an address against a chain and ecosystem",
+        "operationId": "validateAddress",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Address validated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateAddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/addresses": {
+      "get": {
+        "tags": ["Addresses"],
+        "summary": "List all registered addresses for a vault",
+        "description": "Retrieves a paginated list of all addresses registered for monitoring in the specified vault across all ecosystems and chains",
+        "operationId": "listAllVaultAddresses",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of results to return from the start",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of results to return from the end",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor to paginate backwards",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor to paginate forwards",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all vault addresses across all chains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["data", "pageInfo"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RegisteredAddressListItem"
+                      }
+                    },
+                    "pageInfo": {
+                      "$ref": "#/components/schemas/PageInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/addresses/ecosystem/{ecosystem}/chain/{chain}": {
+      "get": {
+        "tags": ["Addresses"],
+        "summary": "List registered addresses for a vault and chain",
+        "description": "Retrieves a paginated list of addresses registered for monitoring in the specified vault and chain",
+        "operationId": "listRegisteredAddresses",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the beginning",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the end",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List registered addresses for a vault and chain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisteredAddressesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Addresses"],
+        "summary": "Register address for vault",
+        "description": "Register address to vault. This will start monitoring the address if monitoring is supported for the chain.",
+        "operationId": "registerAddress",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Address record created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterAddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/addresses/ecosystem/{ecosystem}/chain/{chain}/address/{address}": {
+      "get": {
+        "tags": ["Addresses"],
+        "summary": "Get registered address",
+        "description": "Retrieves details of a specific address registered for monitoring in the specified vault",
+        "operationId": "getRegisteredAddress",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "The address to retrieve details for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get registered address details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["data"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RegisteredAddressListItem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Addresses"],
+        "summary": "Update address",
+        "description": "Updates the hidden assets for a registered address",
+        "operationId": "updateAddress",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract", "mnee"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "The address to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Address updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/addresses/ecosystem/{ecosystem}/chain/{chain}/hd-addresses": {
+      "get": {
+        "tags": ["Addresses"],
+        "summary": "List registered HD addresses for a vault and chain",
+        "description": "Retrieves a paginated list of hierarchical deterministic (HD) addresses registered for monitoring in the specified vault and chain",
+        "operationId": "listHDAddresses",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the beginning",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "required": false,
+            "description": "Number of items to return from the end",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor before which to start returning results",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor after which to start returning results",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List registered HD addresses for a vault and chain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisteredAddressesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Addresses"],
+        "summary": "Create HD address",
+        "description": "Creates a hierarchical deterministic (HD) address for the specified vault and chain",
+        "operationId": "createHDAddress",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHDAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "HD address created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HDAddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/addresses/ecosystem/{ecosystem}/chain/{chain}/hd-addresses/bulk": {
+      "post": {
+        "tags": ["Addresses"],
+        "summary": "Bulk-create HD addresses",
+        "description": "Creates multiple hierarchical deterministic (HD) addresses for the specified vault and chain",
+        "operationId": "bulkCreateHDAddresses",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateHDAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "HD addresses created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCreateHDAddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/balances/ecosystem/{ecosystem}/chain/{chain}/address/{address}/native": {
+      "get": {
+        "tags": ["Balances"],
+        "summary": "Get native balance for an address",
+        "description": "Retrieves the native balance of a specific address on a given chain",
+        "operationId": "getNativeBalance",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "The address to query the balance for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Native balance retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeBalanceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/balances/ecosystem/{ecosystem}/chain/{chain}/address/{address}/tokens": {
+      "get": {
+        "tags": ["Balances"],
+        "summary": "Get token balances for an address",
+        "description": "Get all token balances (ERC-20, SPL, etc.) for a specific address",
+        "operationId": "getTokenBalances",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "The address to query token balances for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token balances retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenBalancesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/chains": {
+      "get": {
+        "tags": ["Chains"],
+        "summary": "List supported chains",
+        "description": "List supported chains and the supported features",
+        "operationId": "listSupportedChains",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ecosystem",
+            "in": "query",
+            "required": false,
+            "description": "Filter by blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "query",
+            "required": false,
+            "description": "Filter by specific chain",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeTestnets",
+            "in": "query",
+            "required": false,
+            "description": "Include testnet chains in results",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of supported chains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportedChainsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/vaults/{vaultId}/transactions/ecosystem/{ecosystem}/chain/{chain}/transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Create transaction from hex",
+        "description": "Creates a transaction record for signing using a pre-built transaction hex, scoped to a specific ecosystem and chain",
+        "operationId": "createTransactionFromHex",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vaultId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the vault",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"]
+            }
+          },
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Blockchain chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["mnee"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransactionFromHexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTransactionFromHexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/evm/chain/{chain}/scan-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Scan EVM transaction for security threats",
+        "description": "Scans an EVM transaction for potential security threats using Blockaid",
+        "operationId": "scanEVMTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "EVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanEVMTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "EVM transaction scan completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanEVMTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/svm/chain/{chain}/scan-transaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Scan SVM transaction for security threats",
+        "description": "Scans an SVM (Solana) transaction for potential security threats using Blockaid",
+        "operationId": "scanSVMTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "Solana chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["solana", "solana-testnet"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanSVMTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SVM transaction scan completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanSVMTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/transactions/ecosystem/evm/chain/{chain}/address/{address}/transaction/{transactionHash}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get EVM transaction",
+        "description": "Retrieves a transaction associated with a specific address on EVM ecosystem",
+        "operationId": "getEVMTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "required": true,
+            "description": "EVM chain identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["abstract"]
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "description": "Account address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "path",
+            "required": true,
+            "description": "Transaction hash",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecosystem",
+            "in": "query",
+            "required": true,
+            "description": "Blockchain ecosystem",
+            "schema": {
+              "type": "string",
+              "enum": ["evm", "svm", "utxo", "tvm"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EVMTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "AccessTokenRequest": {
+        "type": "object",
+        "required": ["clientId", "clientSecret"],
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "Client ID obtained from IO account"
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "Client secret obtained from IO account"
+          }
+        }
+      },
+      "AccessTokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Bearer token for authenticated requests"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Token expiration time in seconds"
+          },
+          "type": {
+            "type": "string",
+            "description": "Token type (typically 'Bearer')"
+          }
+        }
+      },
+      "VaultAsset": {
+        "type": "object",
+        "required": ["id", "publicKey", "name", "symbol", "contractAddress", "balance"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the asset"
+          },
+          "publicKey": {
+            "type": "string",
+            "description": "Public key address for receiving the asset"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the asset"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Trading symbol of the asset"
+          },
+          "contractAddress": {
+            "type": "string",
+            "nullable": true,
+            "description": "Contract address of the asset. For native assets, this will be the native token symbol (e.g., 'ETH' for Ethereum). For ERC20/TRC20 tokens, this will be the actual contract address."
+          },
+          "balance": {
+            "type": "string",
+            "description": "Current balance of the asset in the vault"
+          }
+        }
+      },
+      "VaultAssetsResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VaultAsset"
+            }
+          }
+        }
+      },
+      "Curve": {
+        "type": "object",
+        "required": ["algorithm", "curve", "publicKey"],
+        "properties": {
+          "algorithm": {
+            "type": "string",
+            "description": "Algorithm of the curve"
+          },
+          "curve": {
+            "type": "string",
+            "description": "Curve of the curve"
+          },
+          "publicKey": {
+            "type": "string",
+            "description": "Public key of the curve"
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "required": ["curves"],
+        "properties": {
+          "curves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Curve"
+            }
+          }
+        }
+      },
+      "Signer": {
+        "type": "object",
+        "required": ["id", "weight", "device"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the signer"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Voting weight of the signer"
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          }
+        }
+      },
+      "Vault": {
+        "type": "object",
+        "required": ["id", "name", "status", "createdAt", "updatedAt", "signers"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the vault"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the vault"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the vault"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the vault was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the vault was last updated"
+          },
+          "signers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Signer"
+            }
+          }
+        }
+      },
+      "VaultListItem": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the vault"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the vault"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the vault"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "required": ["startCursor", "endCursor", "hasNextPage", "hasPreviousPage"],
+        "properties": {
+          "startCursor": {
+            "type": "string",
+            "description": "Cursor of the first result in the current page"
+          },
+          "endCursor": {
+            "type": "string",
+            "description": "Cursor of the last result in the current page"
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "description": "Indicates if there are more results after the current page"
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "description": "Indicates if there are more results before the current page"
+          }
+        }
+      },
+      "VaultsResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VaultListItem"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "CreateSignatureRequest": {
+        "type": "object",
+        "required": ["data", "coseAlgorithm", "contentType"],
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Unsigned data to be signed (format depends on contentType)"
+          },
+          "coseAlgorithm": {
+            "type": "string",
+            "enum": ["ES256K", "ESKEC256", "EDDSA"],
+            "description": "The COSE algorithm to use for signing"
+          },
+          "contentType": {
+            "type": "string",
+            "enum": ["application/octet-stream+hex", "application/octet-stream+base64", "text/plain", "application/x-eip712+json"],
+            "description": "The content type of the data"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source of the signature request (visible in UI)"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional memo or description"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional expiration time for the request"
+          }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "required": ["name", "value", "mutable", "isError"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tag name"
+          },
+          "value": {
+            "type": "string",
+            "description": "Tag value"
+          },
+          "mutable": {
+            "type": "boolean",
+            "description": "Whether the tag can be modified"
+          },
+          "isError": {
+            "type": "boolean",
+            "description": "Whether this tag indicates an error"
+          }
+        }
+      },
+      "Vote": {
+        "type": "object",
+        "required": ["required", "vote", "weight", "device"],
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "description": "Whether this vote is required"
+          },
+          "vote": {
+            "type": "string",
+            "enum": ["APPROVE", "REJECTED"],
+            "nullable": true,
+            "description": "Current vote status. null for new requests"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Voting weight of this signer"
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          }
+        }
+      },
+      "Voting": {
+        "type": "object",
+        "required": ["approvedWeight", "progress", "threshold", "votes"],
+        "properties": {
+          "approvedWeight": {
+            "type": "number",
+            "description": "Total weight of approved votes"
+          },
+          "progress": {
+            "type": "string",
+            "description": "Current voting progress status"
+          },
+          "threshold": {
+            "type": "number",
+            "description": "Required weight threshold for approval"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vote"
+            }
+          }
+        }
+      },
+      "SigningData": {
+        "type": "object",
+        "required": ["signature", "data", "contentType", "coseAlgorithm"],
+        "properties": {
+          "signature": {
+            "type": "string",
+            "nullable": true,
+            "description": "The signature (null for new requests)"
+          },
+          "data": {
+            "type": "string",
+            "description": "The unsigned data"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "The content type of the data"
+          },
+          "coseAlgorithm": {
+            "type": "object",
+            "description": "COSE algorithm details"
+          }
+        }
+      },
+      "SignatureRequest": {
+        "type": "object",
+        "required": ["id", "signatureId", "status", "memo", "errorCode", "errorMessage", "voting", "signingData", "createdAt", "updatedAt", "tags"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the signature request"
+          },
+          "signatureId": {
+            "type": "string",
+            "description": "Unique identifier of the signature request (same as id)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "VOTING", "BROADCASTING", "PRESIGNING", "SIGNING", "SUBMITTED", "COMPLETED", "REJECTED", "CANCELLED", "FAILED", "EXPIRED", "CONTRACT_FAILED"],
+            "description": "Current status of the request"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional memo or description"
+          },
+          "errorCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error code if the request failed"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true,
+            "description": "Detailed error message if the request failed"
+          },
+          "voting": {
+            "$ref": "#/components/schemas/Voting"
+          },
+          "signingData": {
+            "$ref": "#/components/schemas/SigningData"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was last updated"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request expires"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "Tags associated with the signature request"
+          }
+        }
+      },
+      "SignatureRequestListItem": {
+        "type": "object",
+        "required": ["id", "status", "memo", "errorCode", "errorMessage", "createdAt", "updatedAt", "tags"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the signature request"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "VOTING", "BROADCASTING", "PRESIGNING", "SIGNING", "SUBMITTED", "COMPLETED", "REJECTED", "CANCELLED", "FAILED", "EXPIRED", "CONTRACT_FAILED"],
+            "description": "Current status of the signature request"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional memo or description"
+          },
+          "errorCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error code if the request failed"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true,
+            "description": "Detailed error message if the request failed"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was last updated"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request expires"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "Tags associated with the signature request"
+          }
+        }
+      },
+      "SignatureRequestsResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SignatureRequestListItem"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "required": ["id", "errorCode", "errorMessage"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transaction"
+          },
+          "errorCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error code if the transaction failed"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true,
+            "description": "Detailed error message if the transaction failed"
+          }
+        }
+      },
+      "TransactionsResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "NativeTransferRequest": {
+        "type": "object",
+        "required": ["amount", "receivingAddress"],
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "receivingAddress": {
+            "type": "string",
+            "description": "Destination address for the transfer"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "A free-form text field for additional information"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Expiration time for the transfer request"
+          }
+        }
+      },
+      "NativeTransferResponse": {
+        "type": "object",
+        "required": ["id", "memo", "createdAt", "updatedAt", "expiresAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transfer"
+          },
+          "memo": {
+            "type": "string",
+            "description": "Memo associated with the transfer"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the transfer was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the transfer was last updated"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "ISO timestamp when the transfer expires"
+          }
+        }
+      },
+      "TokenTransferRequest": {
+        "type": "object",
+        "required": ["receivingAddress", "contractAddress", "amount"],
+        "properties": {
+          "receivingAddress": {
+            "type": "string",
+            "description": "Destination address for the transfer"
+          },
+          "contractAddress": {
+            "type": "string",
+            "description": "Token contract address"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "memo": {
+            "type": "string",
+            "description": "Optional memo for the transfer"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Expiration time for the transfer request"
+          },
+          "advancedOptions": {
+            "type": "object",
+            "description": "Advanced options for the transfer"
+          }
+        }
+      },
+      "SignAndBroadcastRequest": {
+        "type": "object",
+        "required": ["receivingAddress", "contractAddress", "contractData", "amount"],
+        "properties": {
+          "receivingAddress": {
+            "type": "string",
+            "description": "Destination address for the transaction"
+          },
+          "contractAddress": {
+            "type": "string",
+            "description": "Smart contract address"
+          },
+          "contractData": {
+            "type": "string",
+            "description": "Encoded contract data for the transaction"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount to send with the transaction"
+          },
+          "memo": {
+            "type": "string",
+            "description": "Optional memo for the transaction"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Expiration time for the transaction request"
+          }
+        }
+      },
+      "DirectoryEntry": {
+        "type": "object",
+        "required": ["id", "address", "alias", "type", "displayName", "companyName", "legalName"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the directory entry"
+          },
+          "address": {
+            "type": "string",
+            "description": "Blockchain address of the entity"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Unique alias/username"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["INDIVIDUAL", "CORPORATE"],
+            "description": "Type of entity"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Display name"
+          },
+          "companyName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Company name (for corporate entities)"
+          },
+          "legalName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Legal name (for corporate entities)"
+          }
+        }
+      },
+      "DirectoryResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectoryEntry"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "TransferAsset": {
+        "type": "object",
+        "required": ["id", "name", "symbol"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the asset"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the asset"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Symbol of the asset"
+          }
+        }
+      },
+      "NetworkTransfer": {
+        "type": "object",
+        "required": ["id", "signatureId", "transactionHash", "status", "amount", "fromAddress", "toAddress", "asset", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transfer request"
+          },
+          "signatureId": {
+            "type": "string",
+            "description": "Unique identifier of the signature request"
+          },
+          "transactionHash": {
+            "type": "string",
+            "nullable": true,
+            "description": "Hash of the on-chain transaction"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "VOTING", "BROADCASTING", "PRESIGNING", "SIGNING", "SUBMITTED", "COMPLETED", "REJECTED", "CANCELLED", "FAILED", "EXPIRED", "CONTRACT_FAILED"],
+            "description": "Current status of the transfer"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer"
+          },
+          "fromAddress": {
+            "type": "string",
+            "description": "Address sending the assets"
+          },
+          "toAddress": {
+            "type": "string",
+            "description": "Address to receive the assets"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Freeform memo or description"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/TransferAsset"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was last updated"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO timestamp when the request expires"
+          }
+        }
+      },
+      "CreateNetworkTransferRequest": {
+        "type": "object",
+        "required": ["asset", "amount", "toAddress"],
+        "properties": {
+          "asset": {
+            "type": "string",
+            "description": "Asset symbol (e.g., IOF)"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount to transfer in token units"
+          },
+          "toAddress": {
+            "type": "string",
+            "description": "Address to receive the assets"
+          },
+          "memo": {
+            "type": "string",
+            "description": "Freeform memo or description"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional expiration time for the request"
+          }
+        }
+      },
+      "CreateNetworkTransferResponse": {
+        "type": "object",
+        "required": ["id", "signatureId", "status", "amount", "fromAddress", "toAddress", "asset", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transfer"
+          },
+          "signatureId": {
+            "type": "string",
+            "description": "Unique identifier of the signature request"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "VOTING", "BROADCASTING", "PRESIGNING", "SIGNING", "SUBMITTED", "COMPLETED", "REJECTED", "CANCELLED", "FAILED", "EXPIRED", "CONTRACT_FAILED"],
+            "description": "Current status of the transfer"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Transfer amount"
+          },
+          "fromAddress": {
+            "type": "string",
+            "description": "Address sending the assets"
+          },
+          "toAddress": {
+            "type": "string",
+            "description": "Address to receive the assets"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Freeform memo or description"
+          },
+          "asset": {
+            "type": "string",
+            "description": "Asset symbol"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the request was last updated"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO timestamp when the request expires"
+          }
+        }
+      },
+      "NetworkStatementEntry": {
+        "type": "object",
+        "required": ["id", "status", "memo", "transactionHash", "amount", "entryType", "transactionType", "fromAddress", "toAddress", "asset", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transaction"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["COMPLETED"],
+            "description": "Transaction status (only completed transactions are returned)"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional memo given to the transaction"
+          },
+          "transactionHash": {
+            "type": "string",
+            "description": "The hash of the transaction on the blockchain"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Transaction amount"
+          },
+          "entryType": {
+            "type": "string",
+            "enum": ["DEBIT", "CREDIT"],
+            "description": "Whether the transaction is a debit or credit"
+          },
+          "transactionType": {
+            "type": "string",
+            "enum": ["TRANSFER", "MINT", "BURN"],
+            "description": "Type of transaction"
+          },
+          "fromAddress": {
+            "type": "string",
+            "nullable": true,
+            "description": "Source address (null for mints)"
+          },
+          "toAddress": {
+            "type": "string",
+            "nullable": true,
+            "description": "Destination address (null for burns)"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/TransferAsset"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO timestamp when the transaction was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO timestamp when the transaction was last updated"
+          }
+        }
+      },
+      "NetworkStatementResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkStatementEntry"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "ValidateAddressRequest": {
+        "type": "object",
+        "required": ["address"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Address to validate"
+          }
+        }
+      },
+      "ValidateAddressResponse": {
+        "type": "object",
+        "required": ["address", "valid"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The validated address"
+          },
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the address is valid for the specified chain and ecosystem"
+          }
+        }
+      },
+      "RegisterAddressRequest": {
+        "type": "object",
+        "required": ["address"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Address to register"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional derivation path for the address"
+          }
+        }
+      },
+      "RegisterAddressResponse": {
+        "type": "object",
+        "required": ["address"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The registered address"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "Derivation path for the address"
+          }
+        }
+      },
+      "AddressToken": {
+        "type": "object",
+        "required": ["contractAddress", "symbol"],
+        "properties": {
+          "contractAddress": {
+            "type": "string",
+            "description": "Token contract address"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Token symbol"
+          },
+          "decimals": {
+            "type": "number",
+            "description": "Token decimals"
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "Whether the token is hidden"
+          }
+        }
+      },
+      "RegisteredAddress": {
+        "type": "object",
+        "required": ["address", "chain", "vaultId", "workspaceId", "subscriptionId", "updatedAt", "tokens"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Registered address"
+          },
+          "chain": {
+            "type": "string",
+            "description": "Chain identifier"
+          },
+          "vaultId": {
+            "type": "string",
+            "description": "Vault identifier"
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "Workspace identifier"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "Derivation path for the address"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Subscription identifier"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the address was last updated"
+          },
+          "tokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressToken"
+            },
+            "description": "List of tokens associated with this address"
+          }
+        }
+      },
+      "RegisteredAddressesPageInfo": {
+        "type": "object",
+        "required": ["hasNextPage", "hasPreviousPage"],
+        "properties": {
+          "hasNextPage": {
+            "type": "boolean",
+            "description": "Indicates if there are more results after the current page"
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "description": "Indicates if there are more results before the current page"
+          },
+          "startCursor": {
+            "type": "string",
+            "description": "Cursor of the first result in the current page"
+          },
+          "endCursor": {
+            "type": "string",
+            "description": "Cursor of the last result in the current page"
+          }
+        }
+      },
+      "RegisteredAddressesResponse": {
+        "type": "object",
+        "required": ["data", "pageInfo"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisteredAddress"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/RegisteredAddressesPageInfo"
+          }
+        }
+      },
+      "CreateHDAddressRequest": {
+        "type": "object",
+        "properties": {
+          "derivationPath": {
+            "type": "string",
+            "description": "HD derivation path"
+          }
+        }
+      },
+      "HDAddressResponse": {
+        "type": "object",
+        "required": ["address", "chain", "vaultId", "ecosystem"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The generated HD address"
+          },
+          "chain": {
+            "type": "string",
+            "enum": ["mnee", "ripple", "ripple-testnet", "bittensor", "tron", "solana", "bitcoin", "avalanche-p-chain", "avalanche-x-chain", "cardano", "abstract", "arbitrum", "arbitrum-nova", "astar", "avalanche-c", "base", "berachain", "blast", "bsc", "celo", "coqnet", "cronos", "degen", "dfk", "dfk-testnet", "eth", "eth-sepolia", "fantom", "flame", "flow-evm", "fluent-devnet", "fraxtal", "fuse", "gnosis", "ink", "lamina1", "lightlink", "linea", "lukso", "manta-pacific", "mantle", "matchain", "metal", "metis", "mint-sepolia", "mode", "monad-testnet", "moonriver", "morph", "morph-holesky-testnet", "optimism", "orderly-network", "perennial", "plume-devnet", "polygon", "polygon-zkevm", "pulsechain", "quai", "rari", "ronin", "scroll", "shimmer-evm", "sonic", "sophon-testnet", "superposition-testnet", "superseed-sepolia", "xai", "xdc", "zksync-era", "zora"],
+            "description": "Chain identifier"
+          },
+          "vaultId": {
+            "type": "string",
+            "description": "Vault identifier"
+          },
+          "derivationPath": {
+            "type": "string",
+            "nullable": true,
+            "description": "HD derivation path"
+          },
+          "ecosystem": {
+            "type": "string",
+            "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"],
+            "description": "Blockchain ecosystem"
+          }
+        }
+      },
+      "BulkCreateHDAddressRequest": {
+        "type": "object",
+        "required": ["indexFrom", "indexTo"],
+        "properties": {
+          "indexFrom": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Starting index for HD address generation"
+          },
+          "indexTo": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Ending index for HD address generation"
+          }
+        }
+      },
+      "BulkCreateHDAddressResponse": {
+        "type": "object",
+        "required": ["indexFrom", "indexTo"],
+        "properties": {
+          "indexFrom": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Starting index of created addresses"
+          },
+          "indexTo": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Ending index of created addresses"
+          }
+        }
+      },
+      "UpdateAddressRequest": {
+        "type": "object",
+        "properties": {
+          "addToHiddenAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of asset identifiers to add to the hidden assets list"
+          },
+          "removeFromHiddenAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of asset identifiers to remove from the hidden assets list"
+          }
+        }
+      },
+      "UpdateAddressResponse": {
+        "type": "object",
+        "properties": {
+          "addToHiddenAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Asset identifiers that were added to the hidden assets list"
+          },
+          "removeFromHiddenAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Asset identifiers that were removed from the hidden assets list"
+          }
+        }
+      },
+      "NativeBalanceResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["balance", "symbol", "logo", "name", "usdValue", "lastUpdated"],
+            "properties": {
+              "balance": {
+                "type": "string",
+                "description": "The native balance amount"
+              },
+              "symbol": {
+                "type": "string",
+                "description": "The symbol of the native asset"
+              },
+              "logo": {
+                "type": "string",
+                "nullable": true,
+                "description": "URL to the asset logo"
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the native asset"
+              },
+              "usdValue": {
+                "type": "string",
+                "nullable": true,
+                "description": "The USD value of the balance"
+              },
+              "lastUpdated": {
+                "type": "string",
+                "description": "Timestamp of when the balance was last updated"
+              }
+            }
+          }
+        }
+      },
+      "TokenBalancesResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["balance", "symbol", "decimals", "address", "name", "logo", "usdValue"],
+              "properties": {
+                "balance": {
+                  "type": "string",
+                  "description": "The token balance amount"
+                },
+                "symbol": {
+                  "type": "string",
+                  "description": "The symbol of the token"
+                },
+                "decimals": {
+                  "type": "number",
+                  "description": "The number of decimals for the token"
+                },
+                "address": {
+                  "type": "string",
+                  "description": "The token contract address"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "The name of the token"
+                },
+                "logo": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "URL to the token logo"
+                },
+                "usdValue": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "The USD value of the token balance"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SupportedChainsResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "alias", "ecosystem", "nativeCurrency", "features"],
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "nullable": true,
+                  "description": "Unique identifier for the chain"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Human-readable name of the chain"
+                },
+                "alias": {
+                  "type": "string",
+                  "description": "Chain alias used in API requests"
+                },
+                "ecosystem": {
+                  "type": "string",
+                  "enum": ["cosmos", "evm", "svm", "tvm", "utxo", "xrp", "substrate"],
+                  "description": "Blockchain ecosystem the chain belongs to"
+                },
+                "nativeCurrency": {
+                  "type": "object",
+                  "description": "Information about the chain's native currency"
+                },
+                "rpcUrls": {
+                  "type": "object",
+                  "description": "RPC endpoint URLs for the chain"
+                },
+                "blockExplorers": {
+                  "type": "object",
+                  "description": "Block explorer URLs for the chain"
+                },
+                "features": {
+                  "type": "object",
+                  "description": "Supported features for this chain"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateTransactionFromHexRequest": {
+        "type": "object",
+        "required": ["serializedTransaction", "marshalledHex"],
+        "properties": {
+          "serializedTransaction": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of serialized transaction data"
+          },
+          "marshalledHex": {
+            "type": "string",
+            "description": "Marshalled hex representation of the transaction"
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional memo/note for the transaction"
+          },
+          "broadcast": {
+            "type": "boolean",
+            "nullable": true,
+            "default": true,
+            "description": "Whether to broadcast the transaction after signing"
+          }
+        }
+      },
+      "CreateTransactionFromHexResponse": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the created transaction"
+          }
+        }
+      },
+      "ScanEVMTransactionRequest": {
+        "type": "object",
+        "required": ["account_address", "data", "metadata"],
+        "properties": {
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["simulation", "validation", "gas_estimation", "events"]
+            },
+            "minItems": 1,
+            "default": ["validation"],
+            "description": "List of options for desired output: simulation, validation, gas_estimation, events"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "block": {
+                "oneOf": [
+                  {"type": "string"},
+                  {"type": "integer"}
+                ],
+                "default": "latest",
+                "description": "Block for validation: 'latest', block number, or block hash"
+              },
+              "simulate_with_estimated_gas": {
+                "type": "boolean",
+                "default": false,
+                "description": "Simulate with gas estimation (requires gas_estimation option)"
+              }
+            },
+            "description": "Additional validation metadata"
+          },
+          "account_address": {
+            "type": "string",
+            "description": "Address to relate the transaction to for simulation and validation perspective"
+          },
+          "data": {
+            "type": "object",
+            "description": "Transaction data object"
+          }
+        }
+      },
+      "ScanEVMTransactionResponse": {
+        "type": "object",
+        "required": ["result"],
+        "properties": {
+          "result": {
+            "type": "object",
+            "required": ["action"],
+            "properties": {
+              "action": {
+                "type": "string",
+                "description": "The action Blockaid determined for the transaction"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Reason for the action, if any"
+              },
+              "details": {
+                "type": "object",
+                "properties": {
+                  "simulation": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "description": "Error message if simulation failed"
+                      },
+                      "balanceChanges": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["address", "before", "after"],
+                          "properties": {
+                            "address": {
+                              "type": "string",
+                              "description": "Address whose balance changed"
+                            },
+                            "before": {
+                              "type": "string",
+                              "description": "Balance before the transaction"
+                            },
+                            "after": {
+                              "type": "string",
+                              "description": "Balance after the transaction"
+                            }
+                          }
+                        },
+                        "description": "List of balance changes for involved addresses"
+                      },
+                      "gasUsed": {
+                        "type": "string",
+                        "description": "Gas used in the simulation"
+                      },
+                      "gasLimit": {
+                        "type": "string",
+                        "description": "Gas limit for the transaction"
+                      },
+                      "gasPrice": {
+                        "type": "string",
+                        "description": "Gas price used in the simulation"
+                      },
+                      "fee": {
+                        "type": "string",
+                        "description": "Transaction fee calculated in the simulation"
+                      }
+                    },
+                    "description": "Simulation result for EVM transaction"
+                  }
+                },
+                "description": "Details about the scan result"
+              }
+            }
+          }
+        }
+      },
+      "ScanSVMTransactionRequest": {
+        "type": "object",
+        "required": ["encoding", "account_address", "transactions", "metadata"],
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "enum": ["base58", "base64"],
+            "default": "base58",
+            "description": "Transaction encoding format"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["validation", "simulation"]
+            },
+            "minItems": 1,
+            "default": ["simulation", "validation"],
+            "description": "List of options to include in the response"
+          },
+          "account_address": {
+            "type": "string",
+            "description": "Solana account address"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Transactions to scan"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "default": "signAllTransactions",
+                "description": "The RPC method used by the dApp to propose the transaction"
+              }
+            },
+            "description": "Metadata object"
+          }
+        }
+      },
+      "ScanSVMTransactionResponse": {
+        "type": "object",
+        "required": ["encoding", "status", "result", "simulation", "validation", "request_id"],
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "description": "Encoding used for the response"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SUCCESS", "ERROR"],
+            "description": "Status of the simulation/validation"
+          },
+          "result": {
+            "type": "object",
+            "nullable": true,
+            "description": "Result of the request"
+          },
+          "simulation": {
+            "type": "object",
+            "nullable": true,
+            "description": "Transaction Simulation Result"
+          },
+          "validation": {
+            "type": "object",
+            "nullable": true,
+            "description": "Transaction Validation Result"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if the simulation or validation failed"
+          },
+          "error_details": {
+            "type": "object",
+            "properties": {
+              "api_error": {
+                "type": "object",
+                "description": "API error details"
+              },
+              "instruction_error": {
+                "type": "object",
+                "description": "Instruction error details"
+              },
+              "transaction_error": {
+                "type": "object",
+                "description": "Transaction error details"
+              }
+            },
+            "description": "Error details"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique identifier of the request"
+          }
+        }
+      },
+      "EVMTransactionResponse": {
+        "type": "object",
+        "required": ["chain", "accountAddress", "classificationData", "rawTransactionData"],
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": ["abstract", "arbitrum", "arbitrum-nova", "astar", "avalanche-c", "base", "berachain", "blast", "bsc", "celo", "coqnet", "cronos", "degen", "dfk", "dfk-testnet", "eth", "eth-sepolia", "fantom", "flame", "flow-evm", "fluent-devnet", "fraxtal", "fuse", "gnosis", "ink", "lamina1", "lightlink", "linea", "lukso", "manta-pacific", "mantle", "matchain", "metal", "metis", "mint-sepolia", "mode", "monad-testnet", "moonriver", "morph", "morph-holesky-testnet", "optimism", "orderly-network", "perennial", "plume-devnet", "polygon", "polygon-zkevm", "pulsechain", "quai", "rari", "ronin", "scroll", "shimmer-evm", "sonic", "sophon-testnet", "superposition-testnet", "superseed-sepolia", "xai", "xdc", "zksync-era", "zora"],
+            "description": "EVM chain identifier"
+          },
+          "accountAddress": {
+            "type": "string",
+            "description": "Account address associated with the transaction"
+          },
+          "classificationData": {
+            "type": "object",
+            "required": ["type", "description", "transfers"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Classification type of the transaction"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the transaction"
+              },
+              "transfers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["action", "from", "to", "amount"],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "description": "Transfer action type"
+                    },
+                    "from": {
+                      "type": "object",
+                      "description": "Source of the transfer"
+                    },
+                    "to": {
+                      "type": "object",
+                      "description": "Destination of the transfer"
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "Amount transferred"
+                    },
+                    "token": {
+                      "type": "object",
+                      "description": "Token information if applicable"
+                    },
+                    "nft": {
+                      "type": "object",
+                      "description": "NFT information if applicable"
+                    }
+                  }
+                },
+                "description": "List of transfers in the transaction"
+              }
+            },
+            "description": "Classification data for the transaction"
+          },
+          "rawTransactionData": {
+            "type": "object",
+            "required": ["transactionHash", "fromAddress", "toAddress", "blockNumber", "gas", "gasUsed", "gasPrice", "transactionFee", "timestamp"],
+            "properties": {
+              "transactionHash": {
+                "type": "string",
+                "description": "Transaction hash"
+              },
+              "fromAddress": {
+                "type": "string",
+                "description": "Sender address"
+              },
+              "toAddress": {
+                "type": "string",
+                "description": "Recipient address"
+              },
+              "blockNumber": {
+                "type": "number",
+                "description": "Block number"
+              },
+              "gas": {
+                "type": "number",
+                "description": "Gas limit"
+              },
+              "gasUsed": {
+                "type": "number",
+                "description": "Gas used"
+              },
+              "gasPrice": {
+                "type": "number",
+                "description": "Gas price"
+              },
+              "transactionFee": {
+                "type": "object",
+                "description": "Transaction fee details"
+              },
+              "timestamp": {
+                "type": "number",
+                "description": "Transaction timestamp"
+              }
+            },
+            "description": "Raw transaction data"
+          }
+        }
+      }
+    }
+  },
+  "security": []
+}
